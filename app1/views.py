@@ -2,6 +2,7 @@ from django.shortcuts import render
 from uuid import uuid4
 
 # Create your views here.
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework import permissions, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -12,6 +13,9 @@ from app1.serializer import (
     SignInSerializer
 )
 from common.services import sign_up_user
+from common.services import sign_in
+from common.utils import TokenUtils
+
 
 User = get_user_model()
 
@@ -57,4 +61,17 @@ class SignInAPIView(APIView):
         serializer = SignInSerializer(data=request_data)
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.data
-        return Response("User Signed In successfuly!")
+
+        # Get the acces and refresh tokens along with a success( Ture | False ) Flag
+        tokens, success = sign_in(validated_data['email'])
+
+        # Set the response.
+        response = Response(
+            data={"success": success, "Message": "User Signed In successfuly!" },
+            status=status.HTTP_200_OK,
+        )
+
+        # Set the tokens
+        TokenUtils.set_cookie(response=response, tokens=tokens)
+
+        return response
