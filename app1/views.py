@@ -75,15 +75,3 @@ class SignInAPIView(APIView):
         TokenUtils.set_cookie(response=response, tokens=tokens)
 
         return response
-
-class SignOutAPIView(APIView):
-    """
-    APIView to signout an already signed-in user.
-    """
-    
-
-class FileUploadAPIView(APIView):
-    """
-    APIView with which a logged in User can
-    upload a file.
-    """
