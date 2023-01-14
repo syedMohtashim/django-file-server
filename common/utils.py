@@ -123,3 +123,58 @@ class TokenUtils:
             httponly=True,
             samesite=samesite,
         )
+    
+    
+    @classmethod
+    def clear_cookies(cls, response):
+        """
+        This method will be used in the views to 
+        clear both access and refresh tokens simultaneously.
+        """
+
+        cls.delete_access_token(response)
+        cls.delete_refresh_token(response)
+
+    @classmethod
+    def delete_access_token(cls, response):
+        """
+        Deletes your access token.
+        """
+        cls._delete_cookie_from_response(
+            response=response,
+            key="access",
+            path="/",
+            domain=None,
+            samesite="Lax"
+        )
+        
+
+    @classmethod
+    def delete_refresh_token(cls, response):
+        """
+        Deletes your refresh token.
+        """
+        cls._delete_cookie_from_response(
+            response=response,
+            key="refresh",
+            path="/",
+            domain=None,
+            samesite="Lax"
+        )
+
+    @classmethod
+    def _delete_cookie_from_response(
+        cls,
+        response,
+        key,
+        path,
+        domain,
+        samesite,
+    ):
+        """Deletes the cookie identified by key from response"""
+        response.delete_cookie(
+            key,
+            path=path,
+            domain=domain,
+            samesite=samesite,
+        )

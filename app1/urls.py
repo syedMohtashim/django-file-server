@@ -4,10 +4,12 @@ from django.urls import (
 )
 from app1.views import (
     SignUpAPIView,
-    SignInAPIView
+    SignInAPIView,
+    SignOutAPIView
 )
 
 urlpatterns = [
     path('signup/', SignUpAPIView.as_view()),
-    path('signin/', SignInAPIView.as_view())
+    path('signin/', SignInAPIView.as_view()),
+    path('signout/', SignOutAPIView.as_view())
 ]

@@ -4,10 +4,11 @@ from uuid import uuid4
 # Create your views here.
 from rest_framework import status
 from rest_framework.views import APIView
-from rest_framework import permissions, status
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from django.contrib.auth import get_user_model
+from rest_framework import status
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth import get_user_model
 from app1.serializer import (
     SignUpSerializer,
     SignInSerializer
@@ -15,7 +16,6 @@ from app1.serializer import (
 from common.services import sign_up_user
 from common.services import sign_in
 from common.utils import TokenUtils
-
 
 User = get_user_model()
 
@@ -80,7 +80,27 @@ class SignOutAPIView(APIView):
     """
     APIView to signout an already signed-in user.
     """
+    permission_classes = [AllowAny]
     
+    def post(self, request, *args, **kwargs):
+        # Get the refresh token from request
+        refresh_token = request.COOKIES.get("refresh")
+
+        # blacklist it
+        RefreshToken(refresh_token).blacklist()
+
+        # Set Response
+        response = Response(
+            data={"success": True, "Message": "User Signed Out successfuly!" },
+            status=status.HTTP_200_OK,
+        )
+
+        # Clear the cookies
+        TokenUtils.clear_cookies(response)
+
+        # Return Response
+        return response
+
 
 class FileUploadAPIView(APIView):
     """

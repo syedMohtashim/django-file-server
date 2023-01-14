@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    "rest_framework_simplejwt",
+    "rest_framework_simplejwt.token_blacklist",
     'app1',
 ]
 
@@ -133,6 +135,13 @@ NETWORK_TOLERENCE = 60  # Seconds
 ACCESS_TOKEN_LIFETIME = default=timedelta(minutes=5)
 
 REFRESH_TOKEN_LIFETIME = default=timedelta(days=1)
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': ACCESS_TOKEN_LIFETIME,
